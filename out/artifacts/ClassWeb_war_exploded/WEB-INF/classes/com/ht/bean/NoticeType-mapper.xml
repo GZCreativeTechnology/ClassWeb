@@ -1,0 +1,48 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ht.dao.NoticeTypeDAO">
+	<resultMap type="noticeType" id="noticeTypeMap">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="des" property="des"/>
+		<result column="status" property="status"/>
+	</resultMap>
+
+	<select id="query" parameterType="noticeType" resultType="noticeType">
+		select * from t_noticetype where id = #{id};
+	</select>
+
+	<select id="queryAll" resultMap="noticeTypeMap">
+		select * from t_noticetype
+	</select>
+
+	<select id="queryById" parameterType="int" resultType="noticeType">
+		select * from t_noticetype where id = #{id}
+	</select>
+
+	<insert id="insert" parameterType="noticeType">
+		insert into t_noticetype(name,des) values(#{name}, #{des})
+	</insert>
+
+	<update id="update" parameterType="noticeType">
+		update t_noticetype set name = #{name}, des = #{des} where id = #{id}
+	</update>
+
+	<select id="queryByPager" resultMap="noticeTypeMap">
+		select * from t_noticetype where 1 = 1 limit #{pager.beginIndex}, #{pager.pageSize}
+	</select>
+
+	<select id="count" resultType="int" parameterType="noticeType">
+		select count(id) from t_noticetype;
+	</select>
+
+	<delete id="delete" parameterType="int">
+		delete from t_noticetype where id = #{id}
+	</delete>
+
+	<delete id="deleteById" parameterType="int">
+		delete from t_noticetype where id = #{id}
+	</delete>
+</mapper>

@@ -1,0 +1,49 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ht.dao.MessageDAO">
+	<resultMap type="message" id="messageMap">
+		<id column="id" property="id"/>
+		<result column="touser" property="toUser"/>
+		<result column="fouserName" property="foUserName"/>
+		<result column="fouserHead" property="foUserHead"/>
+		<result column="fouser" property="foUser"/>
+		<result column="matterid" property="matterId"/>
+		<result column="matterTitle" property="matterTitle"/>
+		<result column="matterDes" property="matterDes"/>
+		<result column="createtime" property="createTime"/>
+		<result column="des" property="des"/>
+		<result column="status" property="status"/>
+	</resultMap>
+
+	<select id="queryAllList" parameterType="int" resultMap="messageMap">
+		select ms.id as id, ms.touser as toUser, ms.fouser as foUser, u.username as foUserName, u.head as foUserHead,
+		 mt.id as matterId, mt.title as matterTitle, mt.des as matterDes, ms.createtime as createTime,
+		ms.des as des, ms.status as status from t_message ms, t_matter mt, t_user u where ms.fouser =
+	  	u.id and mt.id = ms.matterid and ms.touser = #{id} and ms.status = 0 order by ms.createtime Desc
+	</select>
+
+	<select id="queryAllListByStatus" parameterType="int" resultMap="messageMap">
+		select ms.id as id, ms.touser as toUser, ms.fouser as foUser, u.username as foUserName, u.head as foUserHead,
+		mt.id as matterId, mt.title as matterTitle, mt.des as matterDes, ms.createtime as createTime,
+		ms.des as des, ms.status as status from t_message ms, t_matter mt, t_user u where ms.fouser =
+		u.id and mt.id = ms.matterid and ms.touser = #{id} order by ms.createtime Desc
+	</select>
+
+	<select id="queryById" parameterType="int" resultType="message">
+		select * from t_message where id = #{id}
+	</select>
+
+	<insert id="insert" parameterType="message">
+		insert into t_message(touser, fouser, matterid, createtime, des) values(#{toUser}, #{foUser}, #{matterId}, now(), #{des})
+	</insert>
+
+	<update id="updateAll" parameterType="int">
+		update t_message set status = 1 where touser = #{id};
+	</update>
+
+	<select id="queryByPager" resultMap="messageMap">
+		select * from t_message where 1 = 1 limit #{pager.beginIndex}, #{pager.pageSize}
+	</select>
+</mapper>

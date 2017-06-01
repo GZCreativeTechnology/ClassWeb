@@ -1,0 +1,89 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ht.dao.MatterDAO">
+	<!-- 结果映射，查询出来的哪个字段跟哪个属性关联到一起 
+		type表示此映射与哪个JavaBean关联在一起，可以使用JavaBean的全限定名，也可以配置的别名
+		id表示此结果映射的唯一编号
+	-->
+	<resultMap type="matter" id="matterMap">
+		<!-- id配置主键 -->
+		<id column="id" property="id"/>
+		<!-- result用于配置普通字段 -->
+		<result column="title" property="title"/>
+		<result column="des" property="des"/>
+		<result column="userid" property="userId"/>
+		<result column="createtime" property="createTime"/>
+		<result column="status" property="status"/>
+
+		<collection property="comments" ofType="com.ht.bean.Comment">
+			<id property="id" column="comment_id"/>
+			<result property="des" column="comment_des"/>
+			<result property="userId" column="comment_userId"/>
+			<result property="userName" column="comment_userName"/>
+			<result property="userHead" column="comment_userHead"/>
+			<result property="createTime" column="comment_createTime"/>
+		</collection>
+
+	</resultMap>
+
+
+	<select id="queryMC" resultMap="matterMap">
+		select m.*,c.id as comment_id, u.id as comment_userId,u.username as comment_userName, u.head as comment_userHead,c.des as comment_des,c.createTime as comment_createTime from t_matter m,t_comment c,t_user u where m.id = c.matterid and u.id = c.userid and m.id = #{id} order by c.createtime asc;
+	</select>
+
+	<select id="queryByPagerAndCriteria" resultType="list" resultMap="matterMap">
+		<![CDATA[
+        select * from t_matter where 1 = 1
+        ]]>
+		<if test="matter.name != null and matter.name !=''">
+			and name like concat('%', #{matter.name}, '%')
+		</if>
+		<if test="matter.phone != null and matter.phone !=''">
+			and phone like concat('%', #{matter.phone}, '%')
+		</if>
+		order by created_time desc
+		limit #{pager.beginIndex}, #{pager.pageSize}
+
+	</select>
+	<select id="countByCriteria" resultType="int">
+		<![CDATA[
+        select count(1) from t_matter where 1 = 1
+        ]]>
+		<if test="matter.name != null and matter.name !=''">
+			and name like concat('%', #{matter.name}, '%')
+		</if>
+		<if test="matter.phone != null and matter.phone !=''">
+			and phone like concat('%', #{matter.phone}, '%')
+		</if>
+	</select>
+
+	<select id="queryById" parameterType="int" resultMap="matterMap">
+		select * from t_matter where id = #{id};
+	</select>
+
+	<select id="query" parameterType="matter" resultMap="matterMap">
+		select * from t_matter where id = #{id};
+	</select>
+
+	<select id="queryAll" resultMap="matterMap">
+		select * from t_matter;
+	</select>
+
+	<insert id="insert" parameterType="matter">
+		insert into t_matter(title,des,userid,createtime,status) values(#{title}, #{des}, #{userId}, now(), #{status});
+	</insert>
+
+	<update id="update" parameterType="matter">
+		update t_matter set title = #{title}, des = #{des}, userid = #{userId} where id = #{id}
+	</update>
+
+	<delete id="delete" parameterType="int">
+		delete from t_matter where id = #{id}
+	</delete>
+
+	<delete id="deleteById" parameterType="int">
+		delete from t_matter where id = #{id}
+	</delete>
+</mapper>
