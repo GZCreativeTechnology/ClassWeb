@@ -1,0 +1,98 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ht.dao.CommentDAO">
+	<!-- 结果映射，查询出来的哪个字段跟哪个属性关联到一起 
+		type表示此映射与哪个JavaBean关联在一起，可以使用JavaBean的全限定名，也可以配置的别名
+		id表示此结果映射的唯一编号
+	-->
+	<resultMap type="comment" id="commentMap">
+		<!-- id配置主键 -->
+		<id column="id" property="id"/>
+		<!-- result用于配置普通字段 -->
+		<result column="des" property="des"/>
+		<result column="userid" property="userId"/>
+		<result column="matterid" property="matterId"/>
+		<result column="createtime" property="createTime"/>
+		<result column="status" property="status"/>
+		<association property="matter" javaType="com.ht.bean.Matter">
+			<id column="matter_id" property="id"/>
+			<result column="matter_title" property="title"/>
+			<result column="matter_des" property="des"/>
+			<result column="matter_userId" property="userId"/>
+			<result column="matter_status" property="status"/>
+			<result column="matter_createTime" property="status"/>
+		</association>
+		<collection property="replies" ofType="com.ht.bean.Reply">
+			<id property="id" column="replies_id"/>
+			<result property="des" column="replies_des"/>
+			<result property="userId" column="replies_userId"/>
+			<result property="userHead" column="replies_head"/>
+			<result property="userName" column="replies_userName"/>
+			<result property="userHead" column="replies_userHead" />
+			<result property="commentId" column="replies_commentId"/>
+			<result property="createTime" column="replies_createTime"/>
+		</collection>
+
+
+	</resultMap>
+	<select id="queryByCMId" resultMap="commentMap" parameterType="int">
+		select m.id as matter_id, m.userid as matter_userId, m.createtime as matter_createTime, m.title as matter_title, m.des as matter_des, m.status as matter_status,
+		r.id as replies_id, r.des as replies_des, u.id as replies_userId, u.head as replies_head,
+		  u.username as replies_userName, u.head as replies_userHead, r.createtime as replies_createTime, c.id as replies_commentId
+		 from t_user u, t_comment c, t_matter m, t_reply r where u.id = r.userid and c.id = r.commentid and c.matterid = m.id and c.id = #{id} order by r.createtime asc
+	</select>
+
+
+
+	<select id="queryCM" resultMap="commentMap">
+		select m.title as matter_title, m.des as matter_des, m.createtime as matter_createTime, c.* from t_matter m,t_comment c where m.id = c.matterid;
+	</select>
+
+	<select id="queryByPagerAndCriteria" resultType="list" resultMap="commentMap">
+		<![CDATA[
+        select * from t_user where 1 = 1
+        ]]>
+		<if test="user.name != null and user.name !=''">
+			and name like concat('%', #{user.name}, '%')
+		</if>
+		<if test="user.phone != null and user.phone !=''">
+			and phone like concat('%', #{user.phone}, '%')
+		</if>
+		order by created_time desc
+		limit #{pager.beginIndex}, #{pager.pageSize}
+
+	</select>
+	<select id="countByCriteria" resultType="int">
+		<![CDATA[
+        select count(1) from t_user where 1 = 1
+        ]]>
+		<if test="user.name != null and user.name !=''">
+			and name like concat('%', #{user.name}, '%')
+		</if>
+		<if test="user.phone != null and user.phone !=''">
+			and phone like concat('%', #{user.phone}, '%')
+		</if>
+	</select>
+
+	<select id="queryById" parameterType="int" resultMap="commentMap">
+		select * from t_comment where id = #{id};
+	</select>
+
+	<select id="queryAll" resultMap="commentMap">
+		select * from t_comment;
+	</select>
+
+	<insert id="insert" parameterType="comment">
+		insert into t_comment(des,userid,createtime,status, matterid) values(#{des}, #{userId}, now(), #{status}, #{matterId});
+	</insert>
+
+	<update id="update" parameterType="comment">
+		update t_comment set des = #{des}, userid = #{userId} where id = #{id}
+	</update>
+
+	<delete id="deleteById" parameterType="int">
+		delete from t_comment where id = #{id}
+	</delete>
+</mapper>

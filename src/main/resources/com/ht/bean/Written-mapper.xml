@@ -1,0 +1,42 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ht.dao.WrittenDAO">
+    <resultMap type="written" id="writtenMap">
+        <id column="id" property="id"/>
+        <result column="des" property="des"/>
+        <result column="createtime" property="createTime"/>
+        <association property="user" javaType="com.ht.bean.Users">
+            <id column="user_id" property="id"/>
+            <result column="head" property="head"/>
+            <result column="username" property="userName"/>
+        </association>
+    </resultMap>
+
+    <select id="queryAll" resultMap="writtenMap">
+        select * from t_written
+    </select>
+
+    <select id="queryById" parameterType="int" resultType="written">
+        select * from t_written where id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="written">
+        insert into t_written(userid,des,createtime) values(#{user.id},#{des},#{createTime})
+    </insert>
+
+
+    <delete id="deleteById" parameterType="int">
+        delete from t_written where id = #{id}
+    </delete>
+
+    <select id="queryPager" resultMap="writtenMap">
+        select w.*,u.username,u.id as user_id,u.head from t_written w, t_user u where u.id = w.userid  order by w.createtime desc limit #{pager.beginIndex}, #{pager.pageSize}
+    </select>
+
+    <select id="count" resultType="int" parameterType="written">
+        select count(id) from t_written
+    </select>
+
+</mapper>
