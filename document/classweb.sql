@@ -1,4 +1,6 @@
+﻿drop database if exists classweb;
 create database classweb default charset utf8;
+use classweb;
 /**
 评论表
  */
