@@ -4,9 +4,8 @@ import com.ht.bean.Photo;
 import com.ht.bean.Users;
 import com.ht.common.Constants;
 import com.ht.common.Methods;
-import com.ht.common.web.SessionUtil;
-import com.ht.info.PhotoInfo;
 import com.ht.info.Data;
+import com.ht.info.PhotoInfo;
 import com.ht.service.PhotoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,7 +75,7 @@ public class PhotoController {
     @ResponseBody
     @RequestMapping(value = "random", method = RequestMethod.GET)
     public Data queryRandom() {
-        logger.info("随机查询前10条数据，做瀑布流");
+        logger.info("随机查询前50条数据，做瀑布流");
         Data data = new Data();
         List<PhotoInfo> photoInfos = new ArrayList<PhotoInfo>();
         List<Photo> photos = photoService.queryByRandom();
@@ -95,6 +94,15 @@ public class PhotoController {
         logger.info("查看相片的详情");
         ModelAndView mav = new ModelAndView("classFootprint/photoDetail");
         Photo photo = photoService.queryById(id);
+        mav.addObject("photo", photo);
+        return mav;
+    }
+
+    @RequestMapping(value = "random_photo", method = RequestMethod.GET)
+    public ModelAndView queryByRandomNotId(int id) {
+        logger.info("随即查询相册,不等于当前相册");
+        ModelAndView mav = new ModelAndView("classFootprint/photoDetail");
+        Photo photo = photoService.queryByRandomNotId(id);
         mav.addObject("photo", photo);
         return mav;
     }

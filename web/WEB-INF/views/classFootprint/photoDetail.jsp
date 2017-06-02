@@ -64,6 +64,14 @@
                 <div class="ibox-content" style="text-align: center;">
 
                     <img src="/${requestScope.photo.image}" alt="${requestScope.photo.des}" style="max-width: 80%"/>
+                    <a href="/photo/random_photo?id=${requestScope.photo.id}" style="position: absolute;top: 45%;left: 4%;">
+                        <button class="btn btn-white btn-sm"><img src="/img/left.png" title="上一页" /></i>
+                        </button>
+                    </a>
+                    <a href="/photo/random_photo?id=${requestScope.photo.id}" style=" position: absolute;left: 92%;top: 47%;">
+                        <button class="btn btn-white btn-sm"><img src="/img/right.png" title="下一页"/></i>
+                        </button>
+                    </a>
                 </div>
 
 

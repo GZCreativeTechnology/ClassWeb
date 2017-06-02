@@ -54,7 +54,7 @@
 
     <select id="queryByRandom" resultType="list" resultMap="photoResultMap">
         <![CDATA[
-        select * from t_photo where status = 1 and id >= (select floor(RAND() * ((select MAX(id) from t_photo)-(select MIN(id) from t_photo)) + (select MIN(id) from t_photo))) order by id limit 50
+          select * from t_photo where 1 = 1 and status = 1 and id >= ((select max(id) from t_photo)-(select min(id) from t_photo)) * rand() + (select min(id) from t_photo) limit 50
         ]]>
     </select>
 
@@ -66,5 +66,11 @@
         ]]>
 
     </delete>
+
+    <select id="queryByRandomNotId" parameterType="int" resultType="photo">
+        <![CDATA[
+          select * from t_photo where 1 = 1 and status = 1 and id >= ((select max(id) from t_photo)-(select min(id) from t_photo)) * rand() + (select min(id) from t_photo) and id != #{id} limit 1
+        ]]>
+    </select>
 
 </mapper>

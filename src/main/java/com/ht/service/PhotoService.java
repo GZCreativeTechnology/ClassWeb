@@ -13,4 +13,11 @@ public interface PhotoService extends BaseService<Photo, String> {
      * @return
      */
     public List<Photo> queryByRandom();
+
+    /**
+     * 随即查询一条相册数据,不等于传递进来的id
+     * @param id
+     * @return
+     */
+    public Photo queryByRandomNotId(int id);
 }

@@ -2,7 +2,6 @@ package com.ht.service;
 
 import com.ht.bean.Photo;
 import com.ht.common.bean.Pager4EasyUI;
-import com.ht.common.bean.Pager4EasyUI;
 import com.ht.dao.PhotoDAO;
 import org.springframework.stereotype.Service;
 
@@ -66,5 +65,10 @@ public class PhotoServiceImpl implements PhotoService {
     @Override
     public List<Photo> queryByRandom() {
         return photoDAO.queryByRandom();
+    }
+
+    @Override
+    public Photo queryByRandomNotId(int id) {
+        return photoDAO.queryByRandomNotId(id);
     }
 }
