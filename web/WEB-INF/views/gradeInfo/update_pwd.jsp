@@ -26,7 +26,7 @@
 
 <body class="gray-bg">
 
-<div id="pwd-form" class="modal fade" aria-hidden="true">
+<div id="pwd-form" class="modal fade" aria-hidden="true" data-backdrop="static" keyboard:false>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">

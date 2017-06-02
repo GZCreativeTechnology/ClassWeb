@@ -2,7 +2,13 @@ package com.ht.controller;
 
 import com.ht.bean.Notice;
 import com.ht.bean.Users;
+import com.ht.common.Constants;
+import com.ht.common.message.IndustrySMS;
 import com.ht.service.NoticeService;
+import com.ht.service.UsersService;
+import com.ht.thread.SendEmailThread;
+import com.jh.email.Mail;
+import com.jh.email.MailSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -11,9 +17,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import sun.applet.Main;
 
 import javax.annotation.Resource;
+import javax.mail.BodyPart;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 公告controller
@@ -26,6 +40,9 @@ public class NoticeController {
 
     @Resource
     private NoticeService noticeService;
+
+    @Resource
+    private UsersService usersService;
 
     // 根据id查找公告
     @ResponseBody
@@ -45,6 +62,42 @@ public class NoticeController {
         n.setName(name);
         n.setUserId(u.getId());// session中的user
         n.setNoticeTypeId(typeId);
+
+        List<Users> users = usersService.queryAll(u.getId());
+
+        List<Mail> mailList = new ArrayList<Mail>();
+        String phone = "";
+        for (Users user : users) {
+            // 群发邮件
+            String email = user.getQq() + "@qq.com";
+            Mail mail = new Mail();
+            mail.setRecipients(email);
+            mail.setSubject(name);
+            mail.setType(Mail.HTML);
+            Multipart multipart = new MimeMultipart();
+            BodyPart part1 = new MimeBodyPart();
+            try {
+                part1.setContent("<p>" + des + "</p>", mail.getType());
+                multipart.addBodyPart(part1);
+                mail.setMultipart(multipart);
+                mailList.add(mail);
+            } catch (MessagingException e) {
+            }
+
+            // 群发短信通知
+            if (phone.equals("")) {
+                phone = user.getPhone();
+            } else {
+                phone += "," + user.getPhone();
+            }
+
+        }
+        new Thread(new SendEmailThread(mailList)).start();
+        String to = phone;
+        String smsContent = "【创意科技】亲爱的老同学，有新公告更行了哦，请前往班级网站查看最新公告。";
+        IndustrySMS is = new IndustrySMS(to, smsContent);
+        is.execute();
+
         noticeService.insert(n);
        return new ModelAndView("noticeInfo/notice_info");
     }

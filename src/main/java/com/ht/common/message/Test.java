@@ -35,8 +35,9 @@ public class Test
 
 		// 语音验证码
 		// VoiceCode.execute();
-		String to = "15079767839";
-		String smsContent = "您的验证码为123213，请于30分钟内正确输入，如非本人操作，请忽略此短信。";
+		String to = "15079767839,18279700225,15570102341";
+		String code = "123214";
+		String smsContent = "【创意科技】您的验证码为"+code+"，请于30分钟内正确输入，如非本人操作，请忽略此短信。";
 		IndustrySMS is = new IndustrySMS(to, smsContent);
 		is.execute();
 	/*	Mail mail = new Mail();

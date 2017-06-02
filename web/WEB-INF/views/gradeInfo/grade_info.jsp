@@ -22,6 +22,9 @@
     <link href="/css/font-awesome.css?v=4.4.0" rel="stylesheet">
     <link href="/css/animate.css" rel="stylesheet">
     <link href="/css/style.css?v=4.1.0" rel="stylesheet">
+    <script type="text/javascript"
+            src="http://api.map.baidu.com/api?v=2.0&ak=kb2drrx8WGDVfXy9UVEGOaNhtkGLxVEV"></script>
+
 </head>
 <body class="gray-bg">
 <div class="row">
@@ -60,6 +63,8 @@
                                 <dt>班主任 :</dt>
                                 <dd><a href="/users/queryById/${requestScope.user.id}">${requestScope.user.userName}</a>
                                 </dd>
+                                <dt>班级位置:</dt>
+                                <dd><a href="javascript:;" onclick="showMap()"><i class="fa fa-map-marker"></i></a></dd>
                             </dl>
                         </div>
                     </div>
@@ -188,6 +193,34 @@
 
 </div>
 
+<%--地图弹窗--%>
+<div id="mapWin" style="overflow:scroll" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog" style="width: 1000px;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 b-r">
+                        <span class="glyphicon glyphicon-remove closeModal" data-dismiss="modal" style="float: right; cursor: pointer;"></span>
+                        <h3 class="m-t-none m-b">班级位置</h3>
+
+                        <div style="width:730px;margin:auto;">
+                            <div id="addMap" style="position:relative; width: 700px; height: 500px;">
+                            </div>
+                        </div>
+
+                        <div class="modal-footer" style="overflow:hidden;">
+                            <button type="button" class="btn btn-default"
+                                    data-dismiss="modal">关闭
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- 弹窗 -->
 <div id="update-form" class="modal fade" aria-hidden="true">
     <div class="modal-dialog">
@@ -241,15 +274,34 @@
     </div>
 </div>
 
-
 <!-- 全局js -->
 <script src="/js/jquery.min.js?v=2.1.4"></script>
 <script src="/js/bootstrap.min.js?v=3.3.6"></script>
 
 <!-- 自定义js -->
 <script src="/js/content.js?v=1.0.0"></script>
-
 <script>
+    var map = new BMap.Map("addMap");
+    var point = new BMap.Point(114.9481770000, 25.8050920000);
+    map.centerAndZoom(point, 14);
+    map.enableScrollWheelZoom();    //启用滚轮放大缩小，默认禁用
+    map.enableContinuousZoom();    //启用地图惯性拖拽，默认禁用
+
+    map.addControl(new BMap.NavigationControl());  //添加默认缩放平移控件
+    map.addControl(new BMap.OverviewMapControl()); //添加默认缩略地图控件
+    map.addControl(new BMap.OverviewMapControl({isOpen: true, anchor: BMAP_ANCHOR_BOTTOM_RIGHT}));   //右下角，打开
+    var marker = new BMap.Marker(new BMap.Point(114.9481770000, 25.8050920000));
+    marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+    map.addOverlay(marker);
+
+    var localSearch = new BMap.LocalSearch(map);
+    localSearch.enableAutoViewport(); //允许自动调节窗体大小
+    map.panBy(345,265);
+
+    var stCtrl = new BMap.PanoramaControl(); //构造全景控件
+    stCtrl.setOffset(new BMap.Size(20, 20));
+    map.addControl(stCtrl);//添加全景控件
+
     $(document).ready(function () {
 
         $('#loading-example-btn').click(function () {
@@ -278,6 +330,11 @@
     $("#addWitter").submit(function(){
         $(":submit",this).attr("disabled","disabled");
     });
+
+    function showMap() {
+        $("#mapWin").modal('show');
+    }
 </script>
+
 </body>
 </html>
