@@ -1,5 +1,6 @@
 function showAdd(){
     $("#addNotice").modal('show'); // 显示弹窗
+    error.innerHTML = "";
 }
 
 function addNotice(){
@@ -10,6 +11,7 @@ function addNotice(){
     var error = document.getElementById("error");
     if(name == '' || des == '' || typeId == ''){
         error.innerHTML = "请输入完整的数据";
+        $("#addButton").removeAttr("disabled");
     }else {
         $.post("/notice/insert/" + name + "/" + des + "/" + typeId,
             function (data) {
@@ -25,6 +27,7 @@ function showEdit(str){
             $("#noticeName").val(data.name);
             $("#noticeDes").val(data.des);
             $("#noticeId").val(data.noticeId);
+            error.innerHTML = "";
             ops = document.getElementById("editNoticeType");
             for(var i=0;i<ops.options.length;i++){
                 if(ops.options[i].value==data.noticeTypeId){ // 假如此下拉框其中值的id等于此公告的类型id, 则设置此option为selected
@@ -44,6 +47,7 @@ function updateNotice(){
     var error = document.getElementById("editError");
     if(name == '' || des == '' || typeId == ''){
         error.innerHTML = "请输入完整的数据";
+        $("#editButton").removeAttr("disabled");
     }else {
         $.post("/notice/update/" + str + "/" + name + "/" + des + "/" + typeId,
             function (data) {
