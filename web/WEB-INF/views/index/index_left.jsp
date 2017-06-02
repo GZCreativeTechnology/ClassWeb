@@ -27,6 +27,9 @@
     <script src="/js/jquery.min.js"></script>
     <script>
         $(function(){
+            $.get("/gradeIndex",function (data) {
+                document.title = data.name;
+            });
             tishi();
         });
         function updataAll() {
@@ -120,14 +123,14 @@
                                 <span class="clear">
                                     <span class="block m-t-xs" style="font-size:20px;">
                                         <i class="fa fa-area-chart"></i>
-                                        <strong class="font-bold" >15秋预科</strong>
+                                        <strong class="font-bold" id="gradeName">${gradeInfo.name}</strong>
                                     </span>
                                 </span>
                         </p>
                     </div>
                 </li>
                 <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
-                    <span class="ng-scope">15秋预科</span>
+                    <span class="ng-scope" id="gradeName1">${gradeInfo.name}</span>
                 </li>
                 <li>
                     <a class="J_menuItem" href="/right/queryByIndex">
@@ -178,7 +181,7 @@
                 </li>
 
                 <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
-                    <span class="ng-scope">系统管理</span>
+                    <span class="ng-scope">通知管理</span>
                 </li>
 
 

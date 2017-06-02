@@ -42,7 +42,7 @@
                 <a href="/grade/grade_info"><image src="/${grade.logo}" style="width:50px;height:50px; float:left; margin-right:10px;"></image></a>
                 <dl>
                     <dt>名称：<a href="/grade/grade_info">${grade.name}</a></dt>
-                    <dt>人数：${grade.count}</dt>
+                    <dt>人数：<a href="/users/grade_member">${grade.count}</a></dt>
                     <dt>班主任：<a href="/users/queryById/${requestScope.user.id}">${requestScope.user.userName}</a></dt>
 
                 </dl>
@@ -83,11 +83,7 @@
                             <a href="/users/queryById/${n.userId}"><span style="font-size:15px;">${n.userName}</span></a><br/>
                             <i class="fa fa-clock-o"></i><fmt:formatDate value="${n.noticeDay}" pattern="yyyy/MM/dd  HH:mm:ss"></fmt:formatDate>
                         </div>
-                        <a href="/noticeInfo/queryByPage">
-                            <h2>
-                                    ${n.name}
-                            </h2>
-                        </a>
+                        <a href="/noticeInfo/queryByPage"><h2>${n.name}</h2></a>
                         <p>${n.des}</p>
                     </div>
                 </div>
@@ -129,10 +125,7 @@
                                 <i class="fa fa-clock-o"></i><fmt:formatDate value="${m.createTime}" pattern="yyyy/MM/dd  HH:mm:ss"></fmt:formatDate>
                             </div>
                                 <a href="/matter/matterInFo?id=${m.matterId}">
-                                        <h2>
-                                                ${m.title}
-                                        </h2>
-                                </a>
+                                    <h2>${m.title}</h2></a>
                                 <p>${m.des}</p>
                     </div>
                 </div>

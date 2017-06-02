@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: xiao-kang
-  Date: 2017/2/16
-  Time: 10:54
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -39,7 +32,7 @@
                                     <a href="#update-form" data-toggle="modal"
                                        class="btn btn-white btn-xs pull-right">修改班级</a>
                                 </shiro:hasAnyRoles>
-                                <h2>15秋宏图预科班</h2>
+                                <h2>${requestScope.grade.name}</h2>
                             </div>
 
                         </div>
@@ -244,7 +237,7 @@
                             </div>
                             <div class="form-group">
                                 <label>班级名称：</label>
-                                <input type="text" value="${requestScope.grade.name }" name="name"
+                                <input type="text" id="editGradeName" value="${requestScope.grade.name }" name="name"
                                        class="form-control"/>
                             </div>
                             <div class="form-group">
@@ -261,9 +254,7 @@
                                 <button type="button" class="btn btn-default"
                                         data-dismiss="modal">关闭
                                 </button>
-                                <input type="submit" class="btn btn-primary" value="修改">
-
-                                </input>
+                                <input type="submit" class="btn btn-primary" value="修改"/>
                             </div>
                         </form>
                     </div>
@@ -325,6 +316,9 @@
 
     $("#editGrade").submit(function(){
         $(":submit",this).attr("disabled","disabled");
+        $("#gradeName", window.parent.document).html($("#editGradeName").val());
+        $("#gradeName1", window.parent.document).html($("#editGradeName").val());
+        window.parent.document.title=$("#editGradeName").val();
     });
 
     $("#addWitter").submit(function(){
