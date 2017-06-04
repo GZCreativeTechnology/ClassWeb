@@ -94,7 +94,7 @@ public class NoticeController {
         }
         new Thread(new SendEmailThread(mailList)).start();
         String to = phone;
-        String smsContent = "【创意科技】亲爱的老同学，有新公告更行了哦，请前往班级网站查看最新公告。";
+        String smsContent = "【创意科技】亲爱的老同学，有新公告更新了哦，请前往班级网站查看最新公告。";
         IndustrySMS is = new IndustrySMS(to, smsContent);
         is.execute();
 

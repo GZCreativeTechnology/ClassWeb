@@ -144,6 +144,10 @@
                     <artifactId>servlet-api</artifactId>
                     <groupId>javax.servlet</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>geronimo-spec-javamail</artifactId>
+                    <groupId>geronimo-spec</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
 
